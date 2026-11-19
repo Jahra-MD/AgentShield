@@ -1,0 +1,80 @@
+
+{
+  "name": "Jahra Mohammed",
+  "role": "Software Development Engineer",
+  "experience": "3+ years",
+  "summary": "Full Stack Developer experienced in building enterprise web applications, scalable APIs, event-driven workflows, and AI integrations.",
+  "skills": {
+    "frontend": [
+      "Angular",
+      "React.js",
+      "TypeScript",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "RxJS"
+    ],
+    "backend": [
+      "Node.js",
+      "Express.js",
+      "NestJS",
+      "REST APIs",
+      "GraphQL"
+    ],
+    "databases": [
+      "MongoDB",
+      "MySQL",
+      "PostgreSQL"
+    ],
+    "messaging": [
+      "Apache Kafka",
+      "Microservices"
+    ],
+    "ai": [
+      "Python",
+      "FastAPI",
+      "LangGraph",
+      "MCP"
+    ]
+  },
+  "achievements": [
+    "Contributed to enterprise applications serving 1,000+ daily users.",
+    "Contributed to approximately 40% frontend performance improvement.",
+    "Resolved 50+ production issues.",
+    "Developed and integrated Kafka-based event-driven workflows."
+  ],
+  "projects": {
+    "enterprise_hrms": {
+      "name": "Enterprise HRMS Application",
+      "technologies": [
+        "Angular",
+        "React.js",
+        "Node.js",
+        "NestJS",
+        "MongoDB",
+        "Kafka"
+      ],
+      "description": "Developed enterprise application features, reusable UI components, backend integrations, and business workflows."
+    },
+    "ai_hr_assistant": {
+      "name": "AI HR Assistant",
+      "technologies": [
+        "Python",
+        "FastAPI",
+        "LangGraph",
+        "MCP"
+      ],
+      "description": "Contributed to AI-powered HR workflows, MCP tool integration, and multi-agent orchestration."
+    },
+    "agentshield": {
+      "name": "AgentShield",
+      "technologies": [
+        "Python",
+        "MCP",
+        "asyncio",
+        "Tkinter"
+      ],
+      "description": "Built an MCP authorization gateway with user approval, denial, timeout handling, and concurrent tool request support."
+    }
+  }
+}
