@@ -5,6 +5,18 @@ from tkinter import ttk
 import queue
 
 
+# Short descriptions displayed in the approval popup.
+TOOL_DESCRIPTIONS = {
+    "add_numbers": "Calculate the sum of two numbers.",
+    "get_developer_profile": "Retrieve the developer's professional profile.",
+    "get_technical_skills": "View the developer's technical skills.",
+    "get_project_details": "Retrieve information about a project.",
+    "get_career_achievements": "View the developer's career achievements.",
+    "generate_verification_code": "Generate a new random verification code.",
+    "gateway_health_check": "Check the current status of the MCP gateway.",
+}
+
+
 class ApprovalPopup:
 
     def __init__(self, root, on_decision):
@@ -20,11 +32,10 @@ class ApprovalPopup:
         self.root.geometry("440x320")
         self.root.resizable(False, False)
 
-        # Keep the popup above other windows when displayed.
+        # Keep the popup above other windows.
         self.root.attributes("-topmost", True)
 
-        # Clicking X should block the active request,
-        # not terminate the application.
+        # Closing the popup blocks the active request.
         self.root.protocol(
             "WM_DELETE_WINDOW",
             self.on_close,
@@ -41,6 +52,7 @@ class ApprovalPopup:
             root,
             height=7,
             width=48,
+            wrap="word",
             state="disabled",
         )
         self.arguments_text.pack(
@@ -73,7 +85,7 @@ class ApprovalPopup:
 
         self.set_buttons_enabled(False)
 
-        # Start hidden. The Tkinter mainloop remains alive.
+        # Start hidden until a tool requests approval.
         self.root.withdraw()
 
     def connect_bridge(self, bridge):
@@ -84,17 +96,16 @@ class ApprovalPopup:
         if self.bridge is None:
             return
 
-        # Receive newly requested authorizations.
+        # Receive new authorization requests.
         try:
             while True:
                 request = self.bridge.requests.get_nowait()
-
                 self.waiting_requests.append(request)
 
         except queue.Empty:
             pass
 
-        # Remove requests already completed or timed out.
+        # Remove completed or timed-out requests.
         try:
             while True:
                 finished_id = (
@@ -115,7 +126,7 @@ class ApprovalPopup:
         except queue.Empty:
             pass
 
-        # Show the next pending authorization.
+        # Display the next pending request.
         if self.current_request_id is None:
             self.show_next_request()
 
@@ -155,23 +166,37 @@ class ApprovalPopup:
             text=f"Tool: {tool_name}"
         )
 
-        self.arguments_text.configure(state="normal")
-        self.arguments_text.delete("1.0", tk.END)
-
-        self.arguments_text.insert(
-            tk.END,
-            json.dumps(
-                arguments,
-                indent=2,
-                default=str,
-            ),
+        # Get a short description for the requested tool.
+        description = TOOL_DESCRIPTIONS.get(
+            tool_name,
+            "This tool is requesting permission to execute.",
         )
 
+        # Display arguments only when provided.
+        if arguments:
+            display_text = (
+                f"{description}\n\n"
+                "Arguments:\n"
+                + json.dumps(
+                    arguments,
+                    indent=2,
+                    default=str,
+                )
+            )
+        else:
+            display_text = (
+                f"{description}\n\n"
+                "No additional input is required."
+            )
+
+        self.arguments_text.configure(state="normal")
+        self.arguments_text.delete("1.0", tk.END)
+        self.arguments_text.insert(tk.END, display_text)
         self.arguments_text.configure(state="disabled")
 
         self.set_buttons_enabled(True)
 
-        # Display the popup only when approval is needed.
+        # Show popup when authorization is needed.
         self.root.deiconify()
         self.root.attributes("-topmost", True)
         self.root.lift()
@@ -197,17 +222,17 @@ class ApprovalPopup:
 
         self.reset_display()
 
-        # Hide the popup, but keep AgentShield alive.
+        # Hide the popup but keep AgentShield running.
         self.root.withdraw()
 
-        # Notify the authorization manager.
+        # Send the decision to the authorization manager.
         self.on_decision(request_id, allowed)
 
-        # If another request is waiting, display it.
+        # Show the next waiting request, if any.
         self.show_next_request()
 
     def on_close(self):
-        # Treat closing the popup as a Block decision.
+        # Closing the popup is treated as Block.
         if self.current_request_id is not None:
             self.decide(False)
         else:
@@ -229,16 +254,13 @@ if __name__ == "__main__":
         print_decision,
     )
 
-    # Demonstration request.
+    # Demonstration request without arguments.
     root.after(
         1000,
         lambda: popup.show_request(
             request_id="demo-001",
-            tool_name="add_numbers",
-            arguments={
-                "a": 10,
-                "b": 20,
-            },
+            tool_name="get_developer_profile",
+            arguments={},
         ),
     )
 
