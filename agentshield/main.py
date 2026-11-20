@@ -1,5 +1,6 @@
 
 import asyncio
+from logging import root
 import sys
 import threading
 import tkinter as tk
@@ -65,17 +66,19 @@ def main():
 
     proxy_thread.start()
 
-    root.mainloop()
     print(
-    "[AgentShield] Tkinter mainloop starting",
-    file=sys.stderr,
-    flush=True,
+        "[AgentShield] Tkinter mainloop starting",
+        file=sys.stderr,
+        flush=True,
     )
+
+    root.mainloop()
+
     print(
-    "[AgentShield] Tkinter mainloop exited",
-    file=sys.stderr,
-    flush=True,
-   )
+        "[AgentShield] Tkinter mainloop exited",
+        file=sys.stderr,
+        flush=True,
+    )
 
 
 if __name__ == "__main__":

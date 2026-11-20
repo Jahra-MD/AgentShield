@@ -3,8 +3,6 @@ import asyncio
 from dataclasses import dataclass, field
 from uuid import uuid4
 
-from httpcore2 import request
-
 
 @dataclass
 class ApprovalRequest:
